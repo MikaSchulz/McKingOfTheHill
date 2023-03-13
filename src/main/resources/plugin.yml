@@ -1,0 +1,9 @@
+name: KingOfTheHill
+version: '${version}'
+main: me.eyetealer.mckingofthehill.kingofthehill.KingOfTheHill
+api-version: 1.19
+
+commands:
+  setup:
+    description: Changes the state of the setup mode
+    permission: kingofthehill.setup
