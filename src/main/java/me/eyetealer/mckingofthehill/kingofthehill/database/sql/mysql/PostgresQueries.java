@@ -1,0 +1,20 @@
+package me.eyetealer.mckingofthehill.kingofthehill.database.sql.mysql;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import me.eyetealer.mckingofthehill.kingofthehill.database.sql.SqlQueries;
+
+public class PostgresQueries extends SqlQueries {
+
+  public PostgresQueries(Connection connection) {
+    super(connection);
+  }
+
+  public void createLocationTable() throws SQLException {
+    String query = readFile("queries/postgresql/createLocationTable.sql");
+    PreparedStatement createTableStmt = connection.prepareStatement(query);
+    createTableStmt.executeUpdate();
+  }
+
+}

@@ -1,6 +1,7 @@
 package me.eyetealer.mckingofthehill.kingofthehill;
 
 import me.eyetealer.mckingofthehill.kingofthehill.configuration.ConfigProvider;
+import me.eyetealer.mckingofthehill.kingofthehill.database.sql.SqlInitializer;
 import me.eyetealer.mckingofthehill.kingofthehill.gamestate.GameState;
 import me.eyetealer.mckingofthehill.kingofthehill.gamestate.StateHandler;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -15,6 +16,8 @@ public class KingOfTheHill extends JavaPlugin {
     plugin = this;
 
     ConfigProvider.init(plugin);
+
+    SqlInitializer.init();
 
     stateHandler = new StateHandler(plugin);
 

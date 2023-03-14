@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS Location (
+    Name VARCHAR(255) PRIMARY KEY,
+    World VARCHAR(255),
+    X INTEGER,
+    Y INTEGER,
+    Z INTEGER,
+    Yaw FLOAT,
+    Pitch FLOAT
+);

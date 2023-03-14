@@ -2,7 +2,7 @@ package me.eyetealer.mckingofthehill.kingofthehill.configuration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -11,19 +11,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class ConfigFile {
 
-  private final HashMap<String, Object> defaults;
+  private final Map<String, Object> defaults;
   private final File directory;
   private final File file;
   @Getter
   private FileConfiguration config;
 
   public ConfigFile(JavaPlugin plugin, String fileName) {
-    defaults = new HashMap<>();
+    defaults = new LinkedHashMap<>();
     directory = new File("plugins/" + plugin.getName());
     file = new File(directory, fileName);
   }
 
-  public void init() {
+  public void create() {
     if (file.exists()) {
       return;
     }

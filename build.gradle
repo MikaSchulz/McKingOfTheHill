@@ -17,12 +17,31 @@ repositories {
     }
 }
 
+configurations {
+    pluginImplementation
+
+    implementation.extendsFrom pluginImplementation
+}
+
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT'
+    // Paper
+    compileOnly "io.papermc.paper:paper-api:${project.papermcVersion}"
+
+    // Database connectors
+    pluginImplementation 'com.mysql:mysql-connector-j:8.0.32'
+    pluginImplementation 'org.mariadb.jdbc:mariadb-java-client:3.1.2'
+    pluginImplementation 'org.postgresql:postgresql:42.5.4'
+
+    // Testing frameworks
+    testImplementation "org.junit.jupiter:junit-jupiter:${project.junitJupiterVersion}"
+    testImplementation "org.mockito:mockito-junit-jupiter:${project.mockitoJunitJupiterVersion}"
+    testImplementation "org.assertj:assertj-core:${project.assertjVersion}"
 
     // Lombok
-    compileOnly "org.projectlombok:lombok:1.18.22"
-    annotationProcessor "org.projectlombok:lombok:1.18.22"
+    compileOnly "org.projectlombok:lombok:${project.lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${project.lombokVersion}"
+    testCompileOnly "org.projectlombok:lombok:${project.lombokVersion}"
+    testAnnotationProcessor "org.projectlombok:lombok:${project.lombokVersion}"
 }
 
 def targetJavaVersion = 17
@@ -48,4 +67,18 @@ processResources {
     filesMatching('plugin.yml') {
         expand props
     }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    from {
+        configurations.pluginImplementation.collect {
+            println it
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
