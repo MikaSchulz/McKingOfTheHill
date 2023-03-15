@@ -1,6 +1,7 @@
 package me.eyetealer.mckingofthehill.kingofthehill.database.sql;
 
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import lombok.Getter;
@@ -29,6 +30,8 @@ public class SqlConnector {
     };
   }
 
+//  private Driver
+
   public void connect() {
     try {
       String connectionString = String.format("jdbc:%s://%s:%s/%s?autoReconnect=true",
@@ -36,7 +39,9 @@ public class SqlConnector {
           sqlConnectionInformation.host(),
           sqlConnectionInformation.port(),
           sqlConnectionInformation.database());
-      Class.forName ("org.mariadb.jdbc.Driver");
+      Class.forName(com.mysql.cj.jdbc.Driver.class.getCanonicalName());
+      Class.forName(org.mariadb.jdbc.Driver.class.getCanonicalName());
+      Class.forName(org.postgresql.Driver.class.getCanonicalName());
       connection = DriverManager.getConnection(connectionString,
           sqlConnectionInformation.user(),
           sqlConnectionInformation.password());

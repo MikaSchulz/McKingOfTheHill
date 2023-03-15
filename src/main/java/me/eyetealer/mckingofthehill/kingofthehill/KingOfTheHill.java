@@ -13,14 +13,10 @@ public class KingOfTheHill extends JavaPlugin {
 
   @Getter
   private ConfigProvider configProvider;
-  @Getter
-  private PluginProperties pluginProperties;
 
   public void onEnable() {
 
     KingOfTheHill plugin = this;
-
-    pluginProperties = new PluginProperties();
 
     configProvider = new ConfigProvider(plugin);
     configProvider.init();

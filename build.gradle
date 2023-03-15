@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id "com.github.johnrengelman.shadow" version "8.1.0"
 }
 
 group = 'me.eyetealer.mckingofthehill'
@@ -17,20 +18,18 @@ repositories {
     }
 }
 
-configurations {
-    pluginImplementation
-
-    implementation.extendsFrom pluginImplementation
-}
-
 dependencies {
     // Paper
     compileOnly "io.papermc.paper:paper-api:${project.papermcVersion}"
 
     // Database connectors
-    pluginImplementation 'com.mysql:mysql-connector-j:8.0.32'
-    pluginImplementation 'org.mariadb.jdbc:mariadb-java-client:3.1.2'
-    pluginImplementation 'org.postgresql:postgresql:42.5.4'
+    implementation "com.mysql:mysql-connector-j:${project.mysqlConnectorJ}"
+    implementation "org.mariadb.jdbc:mariadb-java-client:${project.mariadbJavaClient}"
+    implementation "org.postgresql:postgresql:${project.postgresql}"
+
+    // Cloud command framework
+    implementation "cloud.commandframework:cloud-paper:${project.cloudCommandframework}"
+    implementation "cloud.commandframework:cloud-annotations:${project.cloudCommandframework}"
 
     // Testing frameworks
     testImplementation "org.junit.jupiter:junit-jupiter:${project.junitJupiterVersion}"
@@ -73,12 +72,7 @@ test {
     useJUnitPlatform()
 }
 
-jar {
-    from {
-        configurations.pluginImplementation.collect {
-            println it
-            it.isDirectory() ? it : zipTree(it)
-        }
-    }
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+shadowJar {
+//    enableRelocation true
+//    relocationPrefix "me.eyetealer.mckingofthehill.externals"
 }
