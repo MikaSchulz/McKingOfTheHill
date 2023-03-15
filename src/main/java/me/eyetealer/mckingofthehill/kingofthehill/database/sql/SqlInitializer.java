@@ -1,20 +1,27 @@
 package me.eyetealer.mckingofthehill.kingofthehill.database.sql;
 
 import java.sql.SQLException;
-import me.eyetealer.mckingofthehill.kingofthehill.configuration.ConfigProvider;
+import me.eyetealer.mckingofthehill.kingofthehill.KingOfTheHill;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class SqlInitializer {
 
-  public static void init() {
-    SqlConnectionInformation sqlConnectionInformation = readSqlConnectionInformation();
+  private final KingOfTheHill plugin;
+
+  public SqlInitializer(KingOfTheHill plugin) {
+    this.plugin = plugin;
+  }
+
+  public void init() {
+    FileConfiguration config = plugin.getConfigProvider().getConfigFile().getConfig();
+    SqlConnectionInformation sqlConnectionInformation = readSqlConnectionInformation(config);
     SqlConnector sqlConnector = new SqlConnector(sqlConnectionInformation);
     sqlConnector.connect();
     sqlConnector.initSqlQueries();
     setupTables(sqlConnector);
   }
 
-  private static void setupTables(SqlConnector sqlConnector) {
+  private void setupTables(SqlConnector sqlConnector) {
     try {
       sqlConnector.getSqlQueries().createLocationTable();
     } catch (SQLException e) {
@@ -22,8 +29,7 @@ public class SqlInitializer {
     }
   }
 
-  private static SqlConnectionInformation readSqlConnectionInformation() {
-    FileConfiguration config = ConfigProvider.getConfigFile().getConfig();
+  private SqlConnectionInformation readSqlConnectionInformation(FileConfiguration config) {
     String driver = config.getString("sql.driver");
     String host = config.getString("sql.host");
     int port = config.getInt("sql.port");
