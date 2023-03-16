@@ -3,7 +3,7 @@ version: '${version}'
 main: me.eyetealer.mckingofthehill.kingofthehill.KingOfTheHill
 api-version: 1.19
 
-commands:
-  koth:
-    description: King of the hill command
-    aliases: kingofthehill
+#commands:
+#  koth:
+#    description: King of the hill command
+#    aliases: kingofthehill
