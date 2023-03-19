@@ -1,7 +1,5 @@
 package me.eyetealer.mckingofthehill.kingofthehill.command;
 
-import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
-
 import cloud.commandframework.Command.Builder;
 import cloud.commandframework.CommandTree;
 import cloud.commandframework.annotations.AnnotationParser;
@@ -16,7 +14,8 @@ import cloud.commandframework.paper.PaperCommandManager;
 import java.util.List;
 import java.util.function.Function;
 import me.eyetealer.mckingofthehill.kingofthehill.KingOfTheHill;
-import me.eyetealer.mckingofthehill.kingofthehill.configuration.PluginProperties;
+import me.eyetealer.mckingofthehill.kingofthehill.command.commands.LocationCommand;
+import me.eyetealer.mckingofthehill.kingofthehill.command.commands.SetupCommand;
 import me.eyetealer.mckingofthehill.kingofthehill.utils.Messages;
 import org.bukkit.command.CommandSender;
 
@@ -24,13 +23,17 @@ public class CommandHandler {
 
   private final KingOfTheHill plugin;
   private BukkitCommandManager<CommandSender> manager;
-  private AnnotationParser<CommandSender> annotationParser;
 
   public CommandHandler(KingOfTheHill plugin) {
     this.plugin = plugin;
   }
 
   public void init() {
+    registerCommandManager();
+    registerCommands();
+  }
+
+  public void registerCommandManager() {
 
     Function<CommandTree<CommandSender>, CommandExecutionCoordinator<CommandSender>>
         executionCoordinatorFunction = CommandExecutionCoordinator.simpleCoordinator();
@@ -57,7 +60,8 @@ public class CommandHandler {
         CommandMeta.simple()
             .with(CommandMeta.DESCRIPTION, p.get(StandardParameters.DESCRIPTION, "No description"))
             .build();
-    annotationParser = new AnnotationParser<>(manager, CommandSender.class,
+    AnnotationParser<CommandSender> annotationParser = new AnnotationParser<>(manager,
+        CommandSender.class,
         commandMetaFunction);
     annotationParser.parse(this);
     try {
@@ -65,46 +69,22 @@ public class CommandHandler {
     } catch (final Exception e) {
       e.printStackTrace();
     }
+  }
+
+  public void registerCommands() {
+
     List<Builder<CommandSender>> builderList = List.of(
         manager.commandBuilder("kingofthehill"),
         manager.commandBuilder("koth")
     );
 
-    builderList.forEach(builder -> manager.command(builder.literal("setup")
-            .handler(context -> manager.taskRecipe().begin(context)
-                .synchronous(commandContext -> {
-                  commandContext.getSender().sendMessage(Messages.join(miniMessage().deserialize(
-                      "<yellow><bold>SETUP_MODE</bold> is <red><bold>%s".formatted(
-                          getState(PluginProperties.SETUP_MODE.isEnabled())))));
-                }).execute()))
-        .command(builder.literal("setup")
-            .literal("toggle")
-            .handler(context -> manager.taskRecipe().begin(context)
-                .synchronous(commandContext -> {
-                  commandContext.getSender().sendMessage(Messages.join(miniMessage().deserialize(
-                      "<yellow><bold>SETUP_MODE</bold> has been <red><bold>%s"
-                          .formatted(getState(PluginProperties.SETUP_MODE.toggle())))));
-                }).execute()))
-        .command(builder.literal("setup")
-            .literal("enable")
-            .handler(context -> manager.taskRecipe().begin(context)
-                .synchronous(commandContext -> {
-                  PluginProperties.SETUP_MODE.enable();
-                  commandContext.getSender().sendMessage(Messages.join(miniMessage().deserialize(
-                      "<yellow><bold>SETUP_MODE</bold> has been <red><bold>enabled")));
-                }).execute()))
-        .command(builder.literal("setup")
-            .literal("disable")
-            .handler(context -> manager.taskRecipe().begin(context)
-                .synchronous(commandContext -> {
-                  PluginProperties.SETUP_MODE.disable();
-                  commandContext.getSender().sendMessage(Messages.join(miniMessage().deserialize(
-                      "<yellow><bold>SETUP_MODE</bold> has been <red><bold>disabled")));
-                }).execute())));
-  }
+    List<Command> commands = List.of(
+        new SetupCommand(manager),
+        new LocationCommand(manager)
+    );
 
-  private String getState(boolean value) {
-    return value ? "enabled" : "disabled";
+    commands.forEach(command -> builderList.forEach(command::registerCommand));
+
   }
 
 }
