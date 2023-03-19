@@ -24,7 +24,10 @@ dependencies {
 
     // Database connectors
     implementation "com.mysql:mysql-connector-j:${project.mysqlConnectorJ}"
-    implementation "org.mariadb.jdbc:mariadb-java-client:${project.mariadbJavaClient}"
+    implementation("org.mariadb.jdbc:mariadb-java-client:${project.mariadbJavaClient}") {
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+        exclude group: 'org.slf4j', module: 'jcl-over-slf4j'
+    }
     implementation "org.postgresql:postgresql:${project.postgresql}"
 
     // Cloud command framework
@@ -73,6 +76,7 @@ test {
 }
 
 shadowJar {
-//    enableRelocation true
-//    relocationPrefix "me.eyetealer.mckingofthehill.externals"
+    dependsOn test
+    enableRelocation true
+    relocationPrefix "me.eyetealer.mckingofthehill.externals"
 }

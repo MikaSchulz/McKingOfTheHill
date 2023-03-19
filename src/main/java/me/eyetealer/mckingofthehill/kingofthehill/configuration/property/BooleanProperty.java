@@ -1,22 +1,24 @@
 package me.eyetealer.mckingofthehill.kingofthehill.configuration.property;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @AllArgsConstructor(staticName = "of")
 public class BooleanProperty {
 
-  private boolean property;
+  @Getter
+  private boolean enabled;
 
   public boolean toggle() {
-    property = !property;
-    return property;
+    enabled = !enabled;
+    return enabled;
   }
 
   public void enable() {
-    property = true;
+    enabled = true;
   }
 
   public void disable() {
-    property = false;
+    enabled = false;
   }
 }
